@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Saran Thapkhwa (ศรัณ ทัพขวา) | Photography Portfolio</title>
     
     <!-- Tailwind CSS (CDN) -->
@@ -27,138 +27,173 @@
         }
     </script>
     <style>
+        /* สไตล์ Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
         
-        .img-loaded { animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        /* ป้องกันการคลุมดำข้อความบนเว็บ */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+
+        .img-loaded { animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-brand-900 text-brand-50 font-sans antialiased min-h-screen flex flex-col selection:bg-white selection:text-brand-900">
+<!-- เพิ่ม overflow-x-hidden เพื่อไม่ให้เว็บล้นขอบจอซ้ายขวา -->
+<body class="bg-brand-900 text-brand-50 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]" oncontextmenu="return false;">
 
-    <nav class="fixed w-full z-40 bg-brand-900/80 backdrop-blur-lg border-b border-white/5 transition-all duration-300">
+    <nav class="fixed w-full z-40 bg-brand-900/90 backdrop-blur-lg border-b border-white/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="#" class="text-2xl font-bold tracking-tighter text-white flex items-center gap-2">
+                    <a href="#" class="text-xl md:text-2xl font-bold tracking-tighter text-white flex items-center gap-2">
                         SARAN<span class="text-gray-500 font-light">PORTFOLIO</span>
                     </a>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Home</a>
                     <a href="#gallery" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Gallery</a>
-                    <a href="#contact" class="px-6 py-2.5 text-sm font-medium bg-white text-brand-900 rounded-full hover:bg-gray-200 transition-colors shadow-lg shadow-white/10">Contact Me</a>
+                    <a href="#" class="px-6 py-2.5 text-sm font-medium bg-white text-brand-900 rounded-full hover:bg-gray-200 transition-colors shadow-lg shadow-white/10">Contact Me</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <header class="pt-32 pb-16 md:pt-48 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight">
-            Capturing the beauty of <br class="hidden md:block" /> <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">everyday moments.</span>
+    <header class="pt-32 pb-12 md:pt-48 md:pb-20 px-4 sm:px-6 lg:px-8 w-full max-w-7xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight">
+            Capturing the beauty of <br class="hidden sm:block" /> <span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-200 to-gray-500">everyday moments.</span>
         </h1>
-        <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+        <p class="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light leading-relaxed px-4">
             Hi, I'm Saran Thapkhwa (ศรัณ ทัพขวา). A passionate photographer. Welcome to my visual journey.
         </p>
     </header>
 
-    <main id="gallery" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-24">
+    <main id="gallery" class="flex-grow w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         
         <!-- Filter Controls -->
         <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-12" id="filter-container">
-            <!-- Buttons generated dynamically by JS -->
+            <!-- Buttons generated dynamically -->
         </div>
 
-        <!-- Image Grid -->
-        <div id="image-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            <!-- Images will be injected here by JS -->
+        <!-- Masonry Image Layout (Pixieset Style) -->
+        <div id="image-container" class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 md:gap-6 space-y-4 md:space-y-6">
+            <!-- Images will be injected here -->
         </div>
 
     </main>
 
-    <div id="lightbox" class="fixed inset-0 z-50 bg-black/98 hidden opacity-0 transition-all duration-300 flex items-center justify-center backdrop-blur-xl">
-        <button id="lightbox-close" class="absolute top-6 right-6 text-gray-400 hover:text-white p-3 focus:outline-none z-50 bg-black/50 rounded-full backdrop-blur-md transition-colors">
+    <!-- Lightbox (Pop-up) -->
+    <div id="lightbox" class="fixed inset-0 z-50 bg-black/98 hidden opacity-0 transition-all duration-300 flex items-center justify-center backdrop-blur-xl w-full h-full">
+        <button id="lightbox-close" class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-white p-3 focus:outline-none z-50 bg-black/50 rounded-full backdrop-blur-md transition-colors">
             <i class="ph ph-x text-2xl"></i>
         </button>
-        <button id="lightbox-prev" class="absolute left-4 md:left-8 text-gray-400 hover:text-white p-4 focus:outline-none z-50 hidden sm:block bg-black/50 rounded-full backdrop-blur-md transition-colors hover:scale-110">
-            <i class="ph ph-caret-left text-2xl"></i>
+        <button id="lightbox-prev" class="absolute left-2 md:left-8 text-gray-400 hover:text-white p-3 md:p-4 focus:outline-none z-50 bg-black/50 rounded-full backdrop-blur-md transition-colors hover:scale-110">
+            <i class="ph ph-caret-left text-xl md:text-2xl"></i>
         </button>
-        <button id="lightbox-next" class="absolute right-4 md:right-8 text-gray-400 hover:text-white p-4 focus:outline-none z-50 hidden sm:block bg-black/50 rounded-full backdrop-blur-md transition-colors hover:scale-110">
-            <i class="ph ph-caret-right text-2xl"></i>
+        <button id="lightbox-next" class="absolute right-2 md:right-8 text-gray-400 hover:text-white p-3 md:p-4 focus:outline-none z-50 bg-black/50 rounded-full backdrop-blur-md transition-colors hover:scale-110">
+            <i class="ph ph-caret-right text-xl md:text-2xl"></i>
         </button>
         
-        <div class="relative max-w-6xl max-h-[90vh] px-4 w-full h-full flex flex-col items-center justify-center" id="lightbox-container">
+        <div class="relative w-full max-w-7xl h-full flex flex-col items-center justify-center px-12 md:px-24" id="lightbox-container">
             <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center z-0">
                 <i class="ph ph-spinner-gap text-4xl animate-spin text-white/50"></i>
             </div>
-            <img id="lightbox-img" src="" alt="Full size gallery image" class="max-w-full max-h-[80vh] object-contain shadow-2xl relative z-10 transition-all duration-300 scale-95 opacity-0 select-none">
-            <div id="lightbox-caption" class="text-center mt-6 text-gray-300 font-medium text-sm md:text-base z-10 bg-black/50 px-6 py-2 rounded-full backdrop-blur-md"></div>
+            <!-- ป้องกันการคลิกขวาและลากรูปในหน้า Lightbox -->
+            <img id="lightbox-img" src="" alt="Gallery image" class="max-w-full max-h-[85vh] object-contain shadow-2xl relative z-10 transition-all duration-300 scale-95 opacity-0 select-none" draggable="false" oncontextmenu="return false;">
+            <div id="lightbox-caption" class="text-center mt-4 text-gray-300 font-medium text-xs md:text-sm z-10 bg-black/50 px-6 py-2 rounded-full backdrop-blur-md"></div>
         </div>
     </div>
 
-    <footer class="border-t border-white/5 bg-brand-900 mt-auto py-10">
+    <footer class="border-t border-white/5 bg-brand-900 mt-auto py-10 w-full">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-500 text-sm tracking-wide">&copy; <span id="year"></span> Saran Thapkhwa. All rights reserved.</p>
+            <p class="text-gray-500 text-xs md:text-sm tracking-wide">&copy; <span id="year"></span> Saran Thapkhwa. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- SECURITY SCRIPTS (ป้องกันการดูโค้ดและการแฮก) -->
     <script>
-        // Set dynamic year
+        // ป้องกัน Clickjacking (บังคับไม่ให้เว็บอื่นเอาเว็บเราไปแสดงใน Iframe)
+        if (window.top !== window.self) {
+            window.top.location = window.self.location;
+        }
+
+        // ป้องกันการใช้ Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+U, etc.)
+        document.addEventListener('keydown', function(e) {
+            // ดัก F12
+            if(e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            // ดัก Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (Windows/Linux)
+            if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'i' || e.key === 'j')) {
+                e.preventDefault();
+                return false;
+            }
+            if(e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+                return false;
+            }
+            // ดัก Cmd+Option+I, Cmd+Option+J, Cmd+U (Mac)
+            if(e.metaKey && e.altKey && (e.key === 'I' || e.key === 'J' || e.key === 'i' || e.key === 'j')) {
+                e.preventDefault();
+                return false;
+            }
+            if(e.metaKey && (e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+
+    <!-- SYSTEM SCRIPTS -->
+    <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        // DOM Elements
-        const gridContainer = document.getElementById('image-grid');
+        const container = document.getElementById('image-container');
         const filterContainer = document.getElementById('filter-container');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxCaption = document.getElementById('lightbox-caption');
         const lightboxLoader = document.getElementById('lightbox-loader');
 
+        let galleryData = [];
         let currentFilter = 'All';
         let currentImageIndex = 0;
         let filteredImages = [];
-        let galleryData = []; // เปลี่ยนเป็น empty array รอรับข้อมูลจาก API
 
-        // ฟังก์ชันโหลดข้อมูลจาก Vercel API
-        async function loadImagesFromAPI() {
-            // แสดง Loader ตอนกำลังดึงรูป
-            gridContainer.innerHTML = `
+        async function initGallery() {
+            container.innerHTML = `
                 <div class="col-span-full flex flex-col items-center justify-center py-20">
-                    <i class="ph ph-spinner-gap text-4xl animate-spin text-gray-400 mb-4"></i>
-                    <p class="text-gray-400 text-lg">กำลังโหลดรูปภาพจาก Google Drive...</p>
+                    <i class="ph ph-spinner-gap text-4xl animate-spin text-white/50 mb-4"></i>
+                    <p class="text-gray-400">Loading your masterpiece...</p>
                 </div>
             `;
-            
+
             try {
                 const response = await fetch('/api/get-photos');
-                if (!response.ok) throw new Error('API Error');
-                
+                if (!response.ok) throw new Error('Network error');
                 galleryData = await response.json();
                 
                 if (galleryData.length === 0) {
-                    gridContainer.innerHTML = '<p class="col-span-full text-center text-gray-500 py-20 text-lg">ยังไม่มีรูปภาพ กรุณาเพิ่มรูปลงใน Google Drive</p>';
+                    container.innerHTML = '<p class="col-span-full text-center text-gray-500 py-20 text-lg">No images found in Google Drive.</p>';
                     return;
                 }
 
-                extractCategories(galleryData);
+                const categories = ['All', ...new Set(galleryData.map(item => item.category))];
+                renderFilters(categories);
                 renderGallery('All');
             } catch (error) {
-                console.error('Error fetching data:', error);
-                gridContainer.innerHTML = '<p class="col-span-full text-center text-red-400 py-20 text-lg">เกิดข้อผิดพลาดในการโหลดรูปภาพ</p>';
+                console.error(error);
+                container.innerHTML = '<p class="col-span-full text-center text-red-500 py-20">Failed to load images.</p>';
             }
-        }
-
-        function extractCategories(data) {
-            // ดึงชื่อหมวดหมู่ทั้งหมด (ลบพวกหมวดหมู่จำลองทิ้ง ให้ดึงจากข้อมูลจริง)
-            const baseCategories = ['All'];
-            const dataCategories = data.map(item => item.category);
-            const uniqueCats = [...new Set([...baseCategories, ...dataCategories])];
-            renderFilters(uniqueCats);
         }
 
         function renderFilters(categories) {
@@ -166,43 +201,43 @@
             categories.forEach(cat => {
                 const btn = document.createElement('button');
                 btn.textContent = cat;
-                btn.className = `px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 border ${
+                btn.className = `px-5 py-2 rounded-full text-xs md:text-sm font-medium transition-all duration-300 border ${
                     currentFilter === cat 
                     ? 'bg-white text-brand-900 border-white shadow-lg shadow-white/10 scale-105' 
                     : 'bg-brand-800/50 text-gray-400 border-white/5 hover:border-white/20 hover:text-white hover:bg-brand-800'
                 }`;
-                btn.addEventListener('click', () => {
+                btn.onclick = () => {
                     currentFilter = cat;
-                    renderFilters(categories); // Re-render to update active styling
+                    renderFilters(categories);
                     renderGallery(cat);
-                });
+                };
                 filterContainer.appendChild(btn);
             });
         }
 
         function renderGallery(filterCategory) {
-            gridContainer.innerHTML = '';
-            
-            filteredImages = filterCategory === 'All' 
-                ? galleryData 
-                : galleryData.filter(img => img.category === filterCategory);
+            container.innerHTML = '';
+            filteredImages = filterCategory === 'All' ? galleryData : galleryData.filter(img => img.category === filterCategory);
 
             if(filteredImages.length === 0) {
-                gridContainer.innerHTML = `<p class="col-span-full text-center text-gray-500 py-20 text-lg">ไม่มีรูปภาพในหมวดหมู่นี้</p>`;
+                container.innerHTML = `<p class="col-span-full text-center text-gray-500 py-20 text-lg">No images found in this category.</p>`;
                 return;
             }
 
-            filteredImages.forEach((imgData, index) => {
-                const item = document.createElement('div');
-                item.className = 'group relative overflow-hidden rounded-xl bg-brand-800 cursor-pointer aspect-[4/5] sm:aspect-square md:aspect-[3/4] transition-all duration-500 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1';
+            filteredImages.forEach((imgData) => {
+                // อิงจาก Index รวมของข้อมูลทั้งหมด
+                const globalIndex = galleryData.findIndex(item => item.id === imgData.id);
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'group relative overflow-hidden rounded-lg bg-brand-800 cursor-pointer break-inside-avoid shadow-lg transition-transform hover:-translate-y-1';
                 
                 const img = document.createElement('img');
                 img.src = imgData.src;
-                // ลบนามสกุลไฟล์ .jpg, .png ออกตอนแสดงผลชื่อ
-                const displayTitle = imgData.title ? imgData.title.split('.')[0] : 'Untitled'; 
-                img.alt = displayTitle;
+                img.alt = imgData.title;
                 img.loading = 'lazy';
-                img.className = 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-0';
+                img.draggable = false; // ป้องกันลากรูป
+                img.oncontextmenu = () => false; // ป้องกันคลิกขวาที่รูป
+                img.className = 'w-full h-auto object-cover opacity-0 select-none'; 
                 
                 img.onload = () => {
                     img.classList.remove('opacity-0');
@@ -210,23 +245,18 @@
                 };
 
                 const overlay = document.createElement('div');
-                overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6';
+                overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 md:p-5 pointer-events-none';
                 
                 const title = document.createElement('h3');
-                title.className = 'text-white font-semibold text-lg translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-out';
-                title.textContent = displayTitle; 
-
-                const categoryLabel = document.createElement('p');
-                categoryLabel.className = 'text-gray-400 text-sm font-medium tracking-wide uppercase mt-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-out delay-75';
-                categoryLabel.textContent = imgData.category;
+                title.className = 'text-white font-medium text-sm md:text-base translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-out';
+                title.textContent = imgData.title; 
 
                 overlay.appendChild(title);
-                overlay.appendChild(categoryLabel);
-                item.appendChild(img);
-                item.appendChild(overlay);
+                itemDiv.appendChild(img);
+                itemDiv.appendChild(overlay);
 
-                item.addEventListener('click', () => openLightbox(index));
-                gridContainer.appendChild(item);
+                itemDiv.onclick = () => openLightbox(globalIndex);
+                container.appendChild(itemDiv);
             });
         }
 
@@ -238,7 +268,7 @@
             requestAnimationFrame(() => {
                 lightbox.classList.remove('opacity-0');
             });
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.style.overflow = 'hidden'; 
         }
 
         function closeLightbox() {
@@ -254,20 +284,24 @@
         }
 
         function updateLightboxContent() {
-            const imgData = filteredImages[currentImageIndex];
+            // คำนวณหว่าตอนนี้ดูรูปหมวดไหนอยู่
+            let viewList = currentFilter === 'All' ? galleryData : galleryData.filter(item => item.category === currentFilter);
+            if (viewList.length === 0) return;
+
+            // ปรับ logic การเลื่อนรูปให้ตรงกับรูปที่กรองมา
+            let currentViewIndex = viewList.findIndex(item => item.id === galleryData[currentImageIndex].id);
+            if (currentViewIndex === -1) currentViewIndex = 0;
+
+            const imgData = viewList[currentViewIndex];
             
-            // Reset image state for transition
             lightboxImg.classList.remove('scale-100', 'opacity-100');
             lightboxImg.classList.add('scale-95', 'opacity-0');
             lightboxLoader.classList.remove('hidden');
             
-            // Set new source
             lightboxImg.src = imgData.src;
-            const displayTitle = imgData.title ? imgData.title.split('.')[0] : 'Untitled';
-            lightboxImg.alt = displayTitle;
-            lightboxCaption.textContent = `${displayTitle} — ${imgData.category}`;
+            lightboxImg.alt = imgData.title;
+            lightboxCaption.textContent = `${imgData.title} — ${imgData.category}`;
 
-            // Animate in when loaded
             lightboxImg.onload = () => {
                 lightboxLoader.classList.add('hidden');
                 lightboxImg.classList.remove('scale-95', 'opacity-0');
@@ -275,39 +309,50 @@
             };
         }
 
+        function navigateLightbox(direction) {
+            let viewList = currentFilter === 'All' ? galleryData : galleryData.filter(item => item.category === currentFilter);
+            if (viewList.length <= 1) return;
+
+            let currentViewIndex = viewList.findIndex(item => item.id === galleryData[currentImageIndex].id);
+            let nextViewIndex = currentViewIndex + direction;
+
+            if (nextViewIndex >= viewList.length) nextViewIndex = 0;
+            if (nextViewIndex < 0) nextViewIndex = viewList.length - 1;
+
+            const nextItem = viewList[nextViewIndex];
+            currentImageIndex = galleryData.findIndex(item => item.id === nextItem.id);
+            
+            updateLightboxContent();
+        }
+
         // Event Listeners for Lightbox
         document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
         
         document.getElementById('lightbox-next').addEventListener('click', (e) => {
             e.stopPropagation();
-            currentImageIndex = (currentImageIndex + 1) % filteredImages.length;
-            updateLightboxContent();
+            navigateLightbox(1);
         });
         
         document.getElementById('lightbox-prev').addEventListener('click', (e) => {
             e.stopPropagation();
-            currentImageIndex = (currentImageIndex - 1 + filteredImages.length) % filteredImages.length;
-            updateLightboxContent();
+            navigateLightbox(-1);
         });
 
-        // Close on clicking outside the image
         document.getElementById('lightbox-container').addEventListener('click', (e) => {
-            if (e.target.id === 'lightbox-container') {
+            if (e.target === document.getElementById('lightbox-container')) {
                 closeLightbox();
             }
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('hidden')) {
                 if (e.key === 'Escape') closeLightbox();
-                if (e.key === 'ArrowRight') document.getElementById('lightbox-next').click();
-                if (e.key === 'ArrowLeft') document.getElementById('lightbox-prev').click();
+                if (e.key === 'ArrowRight') navigateLightbox(1);
+                if (e.key === 'ArrowLeft') navigateLightbox(-1);
             }
         });
 
-        // เปลี่ยนให้เรียกฟังก์ชันดึง API ตอนโหลดเว็บเสร็จ
-        document.addEventListener('DOMContentLoaded', loadImagesFromAPI);
+        document.addEventListener('DOMContentLoaded', initGallery);
     </script>
 </body>
 </html>
