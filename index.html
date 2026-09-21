@@ -51,8 +51,8 @@
         }
     </style>
 </head>
-<!-- เพิ่ม overflow-x-hidden เพื่อไม่ให้เว็บล้นขอบจอซ้ายขวา -->
-<body class="bg-brand-900 text-brand-50 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]" oncontextmenu="return false;">
+<!-- ปิดระบบห้ามคลิกขวาชั่วคราว เพื่อตรวจสอบระบบ -->
+<body class="bg-brand-900 text-brand-50 font-sans antialiased min-h-screen flex flex-col overflow-x-hidden w-full max-w-[100vw]">
 
     <nav class="fixed w-full z-40 bg-brand-900/90 backdrop-blur-lg border-b border-white/5 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,42 +122,7 @@
         </div>
     </footer>
 
-    <!-- SECURITY SCRIPTS (ป้องกันการดูโค้ดและการแฮก) -->
-    <script>
-        // ป้องกัน Clickjacking (บังคับไม่ให้เว็บอื่นเอาเว็บเราไปแสดงใน Iframe)
-        if (window.top !== window.self) {
-            window.top.location = window.self.location;
-        }
-
-        // ป้องกันการใช้ Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+U, etc.)
-        document.addEventListener('keydown', function(e) {
-            // ดัก F12
-            if(e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // ดัก Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U (Windows/Linux)
-            if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'i' || e.key === 'j')) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
-                e.preventDefault();
-                return false;
-            }
-            // ดัก Cmd+Option+I, Cmd+Option+J, Cmd+U (Mac)
-            if(e.metaKey && e.altKey && (e.key === 'I' || e.key === 'J' || e.key === 'i' || e.key === 'j')) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.metaKey && (e.key === 'U' || e.key === 'u')) {
-                e.preventDefault();
-                return false;
-            }
-        });
-    </script>
-
-    <!-- SYSTEM SCRIPTS -->
+    <!-- SYSTEM SCRIPTS (เพิ่มระบบ Error Detector แล้ว) -->
     <script>
         document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -229,27 +194,47 @@
             }
 
             filteredImages.forEach((imgData) => {
-                // อิงจาก Index รวมของข้อมูลทั้งหมด
                 const globalIndex = galleryData.findIndex(item => item.id === imgData.id);
                 
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'group relative overflow-hidden rounded-lg bg-brand-800 cursor-pointer break-inside-avoid shadow-lg transition-transform hover:-translate-y-1';
+                // เพิ่ม min-h เพื่อให้เห็นกล่องแจ้ง Error ชัดเจน
+                itemDiv.className = 'group relative overflow-hidden rounded-lg bg-brand-800 cursor-pointer break-inside-avoid shadow-lg transition-transform hover:-translate-y-1 min-h-[200px]';
                 
                 const img = document.createElement('img');
                 img.src = imgData.src;
                 img.alt = imgData.title;
                 img.loading = 'lazy';
-                img.draggable = false; // ป้องกันลากรูป
-                img.oncontextmenu = () => false; // ป้องกันคลิกขวาที่รูป
-                img.className = 'w-full h-auto object-cover opacity-0 select-none'; 
+                img.draggable = false;
+                img.oncontextmenu = () => false; 
+                img.className = 'w-full h-auto object-cover opacity-0 select-none absolute inset-0'; 
                 
                 img.onload = () => {
-                    img.classList.remove('opacity-0');
-                    img.classList.add('img-loaded');
+                    img.classList.remove('opacity-0', 'absolute', 'inset-0');
+                    img.classList.add('img-loaded', 'relative');
+                    itemDiv.classList.remove('min-h-[200px]');
+                };
+
+                // ระบบตรวจจับ Error ถ้ารูปพัง
+                img.onerror = () => {
+                    img.remove();
+                    const errorBox = document.createElement('div');
+                    errorBox.className = 'absolute inset-0 flex flex-col items-center justify-center p-4 bg-red-900/30 text-center border border-red-500/30 rounded-lg';
+                    errorBox.innerHTML = `
+                        <i class="ph ph-warning-circle text-red-400 text-3xl mb-2"></i>
+                        <span class="text-red-300 text-sm font-semibold mb-1">ภาพไม่โหลด</span>
+                        <span class="text-gray-400 text-xs break-all max-w-full truncate px-2">${imgData.title}</span>
+                    `;
+                    itemDiv.appendChild(errorBox);
+                    
+                    // เมื่อกดที่รูปที่พัง ให้แสดง Error ใน Console
+                    itemDiv.onclick = () => {
+                        console.error("Image failed to load:", imgData.title, imgData.src);
+                        alert("ไฟล์รูปนี้มีปัญหา: " + imgData.title + "\n\n1. อาจเป็นไฟล์ Raw/HEIC\n2. อาจยังไม่ได้เปิดแชร์สาธารณะ\n3. ขนาดไฟล์อาจใหญ่เกินไป");
+                    };
                 };
 
                 const overlay = document.createElement('div');
-                overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 md:p-5 pointer-events-none';
+                overlay.className = 'absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 md:p-5 pointer-events-none z-10';
                 
                 const title = document.createElement('h3');
                 title.className = 'text-white font-medium text-sm md:text-base translate-y-4 group-hover:translate-y-0 transition-transform duration-300 ease-out';
@@ -259,11 +244,16 @@
                 itemDiv.appendChild(img);
                 itemDiv.appendChild(overlay);
 
-                itemDiv.onclick = () => openLightbox(globalIndex);
+                // ถ้ารูปโหลดปกติถึงจะยอมให้เปิด Lightbox
+                if(!img.onerror) {
+                    itemDiv.onclick = () => openLightbox(globalIndex);
+                }
+                
                 container.appendChild(itemDiv);
             });
         }
 
+        // ระบบ Lightbox ... (ยังคงเดิมไว้ทั้งหมด) ...
         function openLightbox(index) {
             currentImageIndex = index;
             updateLightboxContent();
@@ -288,11 +278,9 @@
         }
 
         function updateLightboxContent() {
-            // คำนวณหว่าตอนนี้ดูรูปหมวดไหนอยู่
             let viewList = currentFilter === 'All' ? galleryData : galleryData.filter(item => item.category === currentFilter);
             if (viewList.length === 0) return;
 
-            // ปรับ logic การเลื่อนรูปให้ตรงกับรูปที่กรองมา
             let currentViewIndex = viewList.findIndex(item => item.id === galleryData[currentImageIndex].id);
             if (currentViewIndex === -1) currentViewIndex = 0;
 
@@ -310,6 +298,11 @@
                 lightboxLoader.classList.add('hidden');
                 lightboxImg.classList.remove('scale-95', 'opacity-0');
                 lightboxImg.classList.add('scale-100', 'opacity-100');
+            };
+            
+            lightboxImg.onerror = () => {
+                lightboxLoader.classList.add('hidden');
+                lightboxCaption.innerHTML = `<span class="text-red-400">รูปภาพมีปัญหา ไม่สามารถขยายได้</span>`;
             };
         }
 
@@ -329,25 +322,12 @@
             updateLightboxContent();
         }
 
-        // Event Listeners for Lightbox
         document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-        
-        document.getElementById('lightbox-next').addEventListener('click', (e) => {
-            e.stopPropagation();
-            navigateLightbox(1);
-        });
-        
-        document.getElementById('lightbox-prev').addEventListener('click', (e) => {
-            e.stopPropagation();
-            navigateLightbox(-1);
-        });
-
+        document.getElementById('lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(1); });
+        document.getElementById('lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); navigateLightbox(-1); });
         document.getElementById('lightbox-container').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('lightbox-container')) {
-                closeLightbox();
-            }
+            if (e.target === document.getElementById('lightbox-container')) closeLightbox();
         });
-
         document.addEventListener('keydown', (e) => {
             if (!lightbox.classList.contains('hidden')) {
                 if (e.key === 'Escape') closeLightbox();
